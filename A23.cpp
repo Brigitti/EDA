@@ -1,0 +1,109 @@
+#include <iostream> 
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+typedef int tArray[10000];
+//  vuelta atras 
+void torreColor(tArray &solucion, int tam, int k, int rojo, int azul, int verde, int contR, int contA, int contV);
+void tratarSolucion(tArray & solucion, int tam);
+
+int main() {
+	tArray solucion;
+	ifstream entrada;
+	string archivo = "A17.txt";
+	entrada.open(archivo);
+	int tam;
+	int rojo;
+	int azul;
+	int verde;
+
+	entrada >> tam;
+	entrada >> azul;
+	entrada >> rojo;
+	entrada >> verde;
+	int contR = 1;
+	int contA = 0;
+	int contV = 0;
+	while (!entrada.eof() && tam != 0 && azul != 0 && verde != 0 && rojo != 0) {
+		int k = 1;
+		solucion[0] = 0;
+		torreColor(solucion, tam, k, rojo, azul, verde, contR, contA, contV);
+		entrada >> tam;
+		entrada >> azul;
+		entrada >> rojo;
+		entrada >> verde;
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+void torreColor(tArray &solucion, int tam, int k, int rojo, int azul, int verde, int contR, int contA, int contV) {
+	for (int color  = 0; color <3; color++) {
+		solucion[k] = color;
+		if (color == 0 ) {
+			contR++;
+				if (contR > contV + contA) {
+					if (k == tam - 1) {
+						tratarSolucion(solucion, tam);
+					}
+
+					else {
+				
+						torreColor(solucion, tam, k + 1, rojo, azul, verde, contR, contA, contV);
+					
+					}
+					contR--;
+				}
+			}
+			if (color == 1) {
+				contA++;
+				if (contA > contV && contR > contA +contV) {
+					if (k == tam - 1){
+						tratarSolucion(solucion, tam);
+					}
+					else {
+						torreColor(solucion, tam, k + 1, rojo, azul, verde, contR, contA, contV);
+						
+					}
+					contA--;
+				}
+						
+			}
+
+			if (color == 2) {
+				contV++;
+				if (contV < contA &&  solucion[k - 1] != 2 && contR > contA +contV) {
+					if (k == tam - 1) {
+						tratarSolucion(solucion, tam);
+					}
+					else {
+						
+						torreColor(solucion, tam, k + 1, rojo, azul, verde, contR, contA, contV);
+					
+					}
+					contV--;
+				}
+					
+			}
+		}
+}
+
+//bool esValida( tArray solucion, int k, int  contA, int contV,int  contA)
+
+void tratarSolucion(tArray & solucion, int tam) {
+	for (int j = 0; j < tam; j++) {
+		if (solucion[j] == 0) {
+			cout << "rojo ";
+		}
+		if (solucion[j] == 1) {
+			cout << "azul ";
+		}
+		if (solucion[j] == 2) {
+			cout << "verde ";
+		}
+	}
+	cout << endl;
+}
